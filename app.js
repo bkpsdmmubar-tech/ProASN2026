@@ -34,6 +34,7 @@
   let data = null;
   const load = fetch('data.json').then(r => r.json()).then(d => (data = d));
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const MAPS = { 'UPT BKN Kendari': 'https://maps.app.goo.gl/VQrfmdmewpriYPEz7' };
   const msg = (t, h) => `<div class="note"><strong>${t}</strong><p>${h}</p></div>`;
 
   function ticket(p) {
@@ -48,7 +49,7 @@
       <h2>${esc(p.n)}</h2>
       <dl><dt>Jadwal tes</dt><dd class="${ready ? 'date' : 'pending'}">${esc(tgl)}</dd>
       ${ready ? `<dd>${esc(sesi)}${jam ? ', pukul ' + esc(jam) : ''}</dd>` : ''}
-      <dt>Lokasi tes</dt><dd>${esc(p.l || 'Belum Tersedia')}</dd></dl></div></article>`;
+      <dt>Lokasi tes</dt><dd>${esc(p.l || 'Belum Tersedia')}</dd>${MAPS[p.l] ? `<a class="map" href="${MAPS[p.l]}" target="_blank" rel="noopener">Buka di Google Maps ↗</a>` : ''}</dl></div></article>`;
   }
 
   $('cek').addEventListener('submit', async e => {
