@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cek Peserta ProASN 2026 · BKPSDM Muna Barat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0b1a4a;--blue:#0a2a94;--red:#b5232b;--sun:#f2d11b;--bg:#f3f5fb;--line:#d5dbee;--mut:#4d5a86}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:640px;margin:0 auto;padding:20px 20px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:3px solid var(--blue)}
+header img{display:block;height:68px;width:auto;max-width:48%;object-fit:contain}
+h1{font-size:clamp(1.7rem,6vw,2.3rem);line-height:1.12;margin:28px 0 8px;font-weight:800;letter-spacing:-.02em}
+.lead{color:var(--mut);margin:0 0 24px}
+form{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px;display:grid;gap:16px}
+label{display:grid;gap:6px;font-weight:700;font-size:.92rem}
+input{font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:6px;background:#fff;color:var(--ink)}
+input:focus-visible,button:focus-visible,a:focus-visible,#hasil:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-color:var(--blue)}
+button{font:inherit;font-weight:800;padding:13px;border:0;border-radius:6px;background:var(--blue);color:#fff;cursor:pointer}
+button:hover{background:#08216f}button:disabled{opacity:.6;cursor:wait}
+#hasil{margin-top:22px;outline-offset:6px}
+.note{background:#fff;border-left:6px solid var(--red);padding:14px 18px;border-radius:0 8px 8px 0}
+.note p{margin:4px 0 0;color:var(--mut)}
+.ticket{display:flex;background:var(--ink);color:#fff;border-radius:12px;overflow:hidden}
+.stub{flex:0 0 84px;background:var(--sun);color:var(--ink);display:grid;place-content:center;text-align:center;border-right:2px dashed var(--ink);padding:12px 6px}
+.stub span{font-size:.78rem;font-weight:700}.stub b{font-size:2.6rem;line-height:1;font-weight:800}
+.body{padding:20px 22px;min-width:0}
+.ok{margin:0;color:var(--sun);font-weight:700;font-size:.9rem}
+.ticket h2{margin:6px 0 14px;font-size:1.25rem;line-height:1.25;overflow-wrap:anywhere}
+dl{margin:0}dt{font-size:.82rem;color:#b8c3ee;margin-top:12px}dd{margin:2px 0 0;font-weight:500}
+.date{font-size:1.45rem;font-weight:800;line-height:1.2}.pending{font-size:1.2rem;font-weight:800;color:var(--sun)}
+section.kontak{margin-top:36px;padding-top:20px;border-top:1px solid var(--line)}
+section.kontak h3{margin:0 0 4px;font-size:1.05rem}section.kontak p{margin:0 0 12px;color:var(--mut)}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 16px}
+li b{font-weight:700}li span{display:flex;gap:14px;flex-wrap:wrap}
+a{color:var(--blue);font-weight:700}
+footer{margin-top:28px;font-size:.82rem;color:var(--mut)}
+@media(max-width:480px){.stub{flex-basis:64px}.stub b{font-size:2rem}header img{height:52px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <img src="assets/logo-bkpsdm.jpg" alt="Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kabupaten Muna Barat">
+  <img src="assets/logo-liwu-mokesa.png" alt="Muna Barat Liwu Mokesa">
+</header>
+<main>
+  <h1>Cek jadwal tes ProASN 2026</h1>
+  <p class="lead">Masukkan nama dan NIP untuk melihat apakah Anda terdaftar, beserta jadwal dan lokasi tes.</p>
+  <form id="cek" autocomplete="off">
+    <label>Nama<input id="nama" required placeholder="Nama sesuai data kepegawaian"></label>
+    <label>NIP<input id="nip" required inputmode="numeric" maxlength="24" placeholder="18 digit NIP"></label>
+    <button id="btn" type="submit">Cek</button>
+  </form>
+  <div id="hasil" tabindex="-1" aria-live="polite"></div>
+</main>
+<section class="kontak">
+  <h3>Narahubung</h3>
+  <p>Ada data yang tidak sesuai? Hubungi salah satu narahubung berikut.</p>
+  <ul>
+    <li><b>Maharani Ayu Lestari</b><span><a href="tel:+6285242833975">085242833975</a><a href="https://wa.me/6285242833975">WhatsApp</a></span></li>
+    <li><b>Nur Zayastuti</b><span><a href="tel:+6281312202924">081312202924</a><a href="https://wa.me/6281312202924">WhatsApp</a></span></li>
+  </ul>
+</section>
+<footer>BKPSDM Kabupaten Muna Barat. Tahap 2 akan dijadwalkan kemudian.</footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
