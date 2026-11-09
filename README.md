@@ -25,3 +25,11 @@ Alamat situs muncul beberapa menit kemudian.
 
 ## Uji lokal
     python -m http.server 8000   # buka http://localhost:8000
+
+## 3. Aktifkan fitur check-in (absensi)
+1. Buka Google Sheets peserta (pastikan sheet **Jadwal** sudah final), lalu **Extensions > Apps Script**.
+2. Ganti isi `Code.gs` dengan isi `absensi/Code.gs`, lalu **Save**. Sesuaikan `RADIUS_M`, `OPEN_BEFORE_MIN`, dan `CLOSE_AFTER_MIN` bila perlu (default: 60 menit sebelum sampai 60 menit setelah sesi dimulai).
+3. **Deploy > New deployment > Web app**. Execute as: **Me**. Who has access: **Anyone**. Klik Deploy, setujui izin, lalu salin URL berakhiran `/exec`.
+4. Tempel URL itu ke `config.js` (`absenUrl: '...'`), lalu unggah ulang `config.js`, `app.js`, dan `index.html` ke GitHub.
+5. Hasil check-in tercatat otomatis di sheet **Absensi** (dibuat otomatis saat check-in pertama).
+Setiap kali `Code.gs` diubah, buat **New version** pada deployment agar perubahan berlaku.

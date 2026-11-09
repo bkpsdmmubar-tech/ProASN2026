@@ -34,6 +34,7 @@
   let data = null;
   const load = fetch('data.json').then(r => r.json()).then(d => (data = d));
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const CFG = window.PROASN_CONFIG || {};
   const MAPS = { 'UPT BKN Kendari': 'https://maps.app.goo.gl/VQrfmdmewpriYPEz7' };
   const msg = (t, h) => `<div class="note"><strong>${t}</strong><p>${h}</p></div>`;
 
@@ -44,12 +45,34 @@
       const m = s.match(/^(Sesi \d)\s*\((.*)\)$/); sesi = m ? m[1] : s; jam = m ? m[2] : '';
     }
     const ready = tgl !== 'Belum Tersedia';
+    const absen = ready && CFG.absenUrl ? `<div class="absen"><h3>Check-in kehadiran</h3>
+      <p>Lakukan di lokasi tes pada tanggal dan sesi Anda (dibuka 60 menit sebelum hingga 60 menit setelah sesi dimulai). Izinkan akses lokasi saat diminta.</p>
+      <button type="button" id="btnAbsen">Check-in sekarang</button><div id="absenHasil" aria-live="polite"></div></div>` : '';
     return `<article class="ticket"><div class="stub"><span>Tahap</span><b>${esc(p.t)}</b></div>
       <div class="body"><p class="ok">Terdaftar sebagai peserta ProASN 2026</p>
       <h2>${esc(p.n)}</h2>
       <dl><dt>Jadwal tes</dt><dd class="${ready ? 'date' : 'pending'}">${esc(tgl)}</dd>
       ${ready ? `<dd>${esc(sesi)}${jam ? ', pukul ' + esc(jam) : ''}</dd>` : ''}
-      <dt>Lokasi tes</dt><dd>${esc(p.l || 'Belum Tersedia')}</dd>${MAPS[p.l] ? `<a class="map" href="${MAPS[p.l]}" target="_blank" rel="noopener">Buka di Google Maps ↗</a>` : ''}</dl></div></article>`;
+      <dt>Lokasi tes</dt><dd>${esc(p.l || 'Belum Tersedia')}</dd>${MAPS[p.l] ? `<a class="map" href="${MAPS[p.l]}" target="_blank" rel="noopener">Buka di Google Maps ↗</a>` : ''}</dl>${absen}</div></article>`;
+  }
+
+  const GEO = { 1: 'Akses lokasi ditolak. Izinkan lokasi untuk situs ini di pengaturan browser, lalu coba lagi.', 2: 'Lokasi tidak tersedia. Aktifkan GPS lalu coba lagi.', 3: 'Lokasi terlalu lama didapat. Pindah ke area terbuka lalu coba lagi.' };
+  async function checkin(who, btn) {
+    const box = $('absenHasil'); btn.disabled = true; box.className = ''; box.textContent = 'Mengambil lokasi…';
+    try {
+      const pos = await new Promise((res, rej) => navigator.geolocation
+        ? navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 })
+        : rej({ code: 2 }));
+      box.textContent = 'Memeriksa jadwal dan lokasi…';
+      const r = await fetch(CFG.absenUrl, { method: 'POST', body: JSON.stringify({ nip: who.nip, nama: who.nama, lat: pos.coords.latitude, lon: pos.coords.longitude, acc: pos.coords.accuracy }) });
+      const d = await r.json(), good = d.status === 'ok' || d.status === 'already';
+      box.className = good ? 'good' : 'bad';
+      box.innerHTML = `<strong>${good ? (d.status === 'ok' ? 'Check-in berhasil' : 'Sudah check-in') : 'Check-in belum berhasil'}</strong><p>${esc(d.status === 'ok' ? 'Tercatat ' + d.waktu + ' WITA, ' + d.jarak + ' m dari lokasi tes.' : d.message)}</p>`;
+    } catch (err) {
+      box.className = 'bad';
+      box.innerHTML = `<strong>Check-in belum berhasil</strong><p>${esc(GEO[err && err.code] || 'Tidak dapat terhubung ke layanan check-in. Coba lagi atau hubungi narahubung.')}</p>`;
+    }
+    btn.disabled = false;
   }
 
   $('cek').addEventListener('submit', async e => {
@@ -58,12 +81,14 @@
     try {
       await load;
       const r = await lookup($('nama').value, $('nip').value, data);
+      const who = window.__who = { nama: $('nama').value, nip: $('nip').value.replace(/\D/g, '') };
       out.innerHTML = r.status === 'ok' ? ticket(r.p)
         : r.status === 'format' ? msg('NIP harus 18 digit', 'Periksa kembali NIP Anda, lalu klik Cek lagi.')
         : msg('Data tidak ditemukan', 'Pastikan nama dan NIP sesuai data kepegawaian. Jika sudah sesuai namun tetap tidak ditemukan, hubungi narahubung di bawah.');
     } catch (err) {
       out.innerHTML = msg('Data belum dapat dimuat', 'Muat ulang halaman, atau hubungi narahubung di bawah.');
     }
+    const ab = $('btnAbsen'); if (ab) ab.onclick = () => checkin(window.__who, ab);
     btn.disabled = false; btn.textContent = 'Cek'; out.focus();
   });
 })(typeof window !== 'undefined' ? window : module.exports);
