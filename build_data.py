@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Ubah spreadsheet peserta menjadi data.json terenkripsi.
-Pemakaian: python build_data.py Daftar_PNS_ProASN_2026_FINAL.xlsx   (atau .csv)
+Pemakaian: python build_data.py Daftar_PNS_ProASN_2026_FINAL.xlsx [data.json] [link_grup_WA]   (atau .csv)
 Kolom yang dibaca: NIP, Nama, Tahap, Jadwal, Lokasi Tes ProASN."""
 import sys, os, re, csv, json, base64, hashlib
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
@@ -22,7 +22,7 @@ def rows(path):
 
 def clean(v): return '' if v is None else str(v).strip()
 
-def main(src, out='data.json'):
+def main(src, out='data.json', wa=''):
     salt = os.urandom(16); records = {}
     for r in rows(src):
         raw = r.get('NIP')
@@ -30,6 +30,7 @@ def main(src, out='data.json'):
         if not nip: continue
         tahap = clean(r.get('Tahap')); tahap = str(int(float(tahap))) if tahap else ''
         p = {'n': clean(r.get('Nama')), 't': tahap, 'j': clean(r.get('Jadwal')), 'l': clean(r.get('Lokasi Tes ProASN'))}
+        if wa and tahap == '1': p['w'] = wa  # link grup WhatsApp, hanya untuk Tahap 1 (ikut terenkripsi)
         bits = hashlib.pbkdf2_hmac('sha256', nip.encode(), salt, ITER, 64)
         iv = os.urandom(12)
         records[bits[:32].hex()] = b64(iv + AESGCM(bits[32:]).encrypt(iv, json.dumps(p).encode(), None))
@@ -37,4 +38,4 @@ def main(src, out='data.json'):
     print(f'{len(records)} peserta ditulis ke {out}')
 
 if __name__ == '__main__':
-    main(*sys.argv[1:3]) if len(sys.argv) > 1 else sys.exit(__doc__)
+    main(*sys.argv[1:4]) if len(sys.argv) > 1 else sys.exit(__doc__)

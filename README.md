@@ -33,3 +33,10 @@ Alamat situs muncul beberapa menit kemudian.
 4. Tempel URL itu ke `config.js` (`absenUrl: '...'`), lalu unggah ulang `config.js`, `app.js`, dan `index.html` ke GitHub.
 5. Hasil check-in tercatat otomatis di sheet **Absensi** (dibuat otomatis saat check-in pertama).
 Setiap kali `Code.gs` diubah, buat **New version** pada deployment agar perubahan berlaku.
+
+## Link grup WhatsApp (Tahap 1)
+Link grup tidak ditulis di kode. Link disisipkan ke data peserta Tahap 1 yang sudah terenkripsi saat membuat data:
+
+    python3 build_data.py Daftar_PNS_ProASN_2026_FINAL.xlsx data.json "LINK_GRUP_WA"
+
+Peserta Tahap 1 melihat tombol "Gabung Grup WhatsApp"; Tahap 2 tidak melihatnya.
