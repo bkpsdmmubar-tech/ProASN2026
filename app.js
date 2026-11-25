@@ -33,14 +33,15 @@
   const $ = id => document.getElementById(id);
   let data = null;
   const load = fetch('data.json').then(r => r.json()).then(d => (data = d));
-  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const esc = s => s.replace(/[&<>\"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const CFG = window.PROASN_CONFIG || {};
   const MAPS = { 'UPT BKN Kendari': 'https://maps.app.goo.gl/VQrfmdmewpriYPEz7' };
   const msg = (t, h) => `<div class="note"><strong>${t}</strong><p>${h}</p></div>`;
 
   function ticket(p) {
     let tgl = 'Belum Tersedia', sesi = '', jam = '';
-    if (p.t === '1' && p.j) {
+    // Tampilkan jadwal untuk peserta tahap mana pun jika memang sudah tercantum di data.
+    if (p.j) {
       const [d, s = ''] = p.j.split(' - '); tgl = d;
       const m = s.match(/^(Sesi \d)\s*\((.*)\)$/); sesi = m ? m[1] : s; jam = m ? m[2] : '';
     }
