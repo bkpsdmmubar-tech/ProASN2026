@@ -48,7 +48,7 @@
     const absen = ready && CFG.absenUrl ? `<div class="absen"><h3>Check-in kehadiran</h3>
       <p>Lakukan di lokasi tes pada tanggal dan sesi Anda (dibuka 60 menit sebelum hingga 60 menit setelah sesi dimulai). Izinkan akses lokasi saat diminta.</p>
       <button type="button" id="btnAbsen">Check-in sekarang</button><div id="absenHasil" aria-live="polite"></div></div>` : '';
-    const wa = p.w ? `<div class="wa"><h3>Grup WhatsApp Peserta Tahap 1</h3><p>Bergabunglah ke grup untuk informasi dan pengumuman selama pelaksanaan tes.</p><a class="wabtn" href="${esc(p.w)}" target="_blank" rel="noopener">Gabung Grup WhatsApp ↗</a></div>` : '';
+    const wa = p.w ? `<div class="wa"><h3>Grup WhatsApp Peserta Tahap ${esc(p.t)}</h3><p>Bergabunglah ke grup untuk informasi dan pengumuman selama pelaksanaan tes.</p><a class="wabtn" href="${esc(p.w)}" target="_blank" rel="noopener">Gabung Grup WhatsApp ↗</a></div>` : '';
     return `<article class="ticket"><div class="stub"><span>Tahap</span><b>${esc(p.t)}</b></div>
       <div class="body"><p class="ok">Terdaftar sebagai peserta ProASN 2026</p>
       <h2>${esc(p.n)}</h2>

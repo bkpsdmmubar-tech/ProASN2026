@@ -40,3 +40,7 @@ Link grup tidak ditulis di kode. Link disisipkan ke data peserta Tahap 1 yang su
     python3 build_data.py Daftar_PNS_ProASN_2026_FINAL.xlsx data.json "LINK_GRUP_WA"
 
 Peserta Tahap 1 melihat tombol "Gabung Grup WhatsApp"; Tahap 2 tidak melihatnya.
+
+Untuk Tahap 2 yang sudah punya jadwal, tambahkan link grup kedua sebagai argumen ke-4:
+
+    python3 build_data.py file.xlsx data.json "LINK_TAHAP_1" "LINK_TAHAP_2"
