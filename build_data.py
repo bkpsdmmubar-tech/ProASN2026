@@ -22,7 +22,7 @@ def rows(path):
 
 def clean(v): return '' if v is None else str(v).strip()
 
-def main(src, out='data.json', wa=''):
+def main(src, out='data.json', wa='', wa2=''):
     salt = os.urandom(16); records = {}
     for r in rows(src):
         raw = r.get('NIP')
@@ -30,7 +30,8 @@ def main(src, out='data.json', wa=''):
         if not nip: continue
         tahap = clean(r.get('Tahap')); tahap = str(int(float(tahap))) if tahap else ''
         p = {'n': clean(r.get('Nama')), 't': tahap, 'j': clean(r.get('Jadwal')), 'l': clean(r.get('Lokasi Tes ProASN'))}
-        if wa and tahap == '1': p['w'] = wa  # link grup WhatsApp, hanya untuk Tahap 1 (ikut terenkripsi)
+        if wa and tahap == '1': p['w'] = wa  # grup WhatsApp Tahap 1 (ikut terenkripsi)
+        if wa2 and tahap == '2' and p['j']: p['w'] = wa2  # grup WhatsApp Tahap 2 yang sudah punya jadwal
         bits = hashlib.pbkdf2_hmac('sha256', nip.encode(), salt, ITER, 64)
         iv = os.urandom(12)
         records[bits[:32].hex()] = b64(iv + AESGCM(bits[32:]).encrypt(iv, json.dumps(p).encode(), None))
@@ -38,4 +39,4 @@ def main(src, out='data.json', wa=''):
     print(f'{len(records)} peserta ditulis ke {out}')
 
 if __name__ == '__main__':
-    main(*sys.argv[1:4]) if len(sys.argv) > 1 else sys.exit(__doc__)
+    main(*sys.argv[1:5]) if len(sys.argv) > 1 else sys.exit(__doc__)
